@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cronômetro com Alerta</title>
+  <style>
+    .blink {
+      animation: blink-animation 1s steps(5, start) infinite;
+      -webkit-animation: blink-animation 1s steps(5, start) infinite;
+    }
+
+    @keyframes blink-animation {
+      to {
+        visibility: hidden;
+      }
+    }
+
+    @-webkit-keyframes blink-animation {
+      to {
+        visibility: hidden;
+      }
+    }
+
+    .time-warning {
+      background-color: rebeccapurple
+    }
+  </style>
+</head>
+<body>
+  <h1>Cronômetro com Alerta</h1>
+  <label for="minutes">Minutos:</label>
+  <input type="number" id="minutes" value="0" min="0" max="59">
+  <label for="seconds">Segundos:</label>
+  <input type="number" id="seconds" value="0" min="0" max="59">
+  <p id="timer">0:00</p>
+  <button onclick="startTimer()">Iniciar</button>
+  <button onclick="stopTimer()">Parar</button>
+
+  <script>
+    let timerInterval;
+    let totalSeconds = 0;
+
+    function startTimer() {
+      let minutes = parseInt(document.getElementById("minutes").value);
+      let seconds = parseInt(document.getElementById("seconds").value);
+      totalSeconds = minutes * 60 + seconds;
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+      totalSeconds = 0;
+      document.getElementById("timer").textContent = "0:00";
+      document.body.classList.remove("time-warning");
+    }
+
+    function updateTimer() {
+      totalSeconds--;
+      let minutes = Math.floor(totalSeconds / 60);
+      let seconds = totalSeconds % 60;
+      document.getElementById("timer").textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+      if (totalSeconds === 0) {
+        stopTimer();
+        alert("O tempo acabou!");
+      } else if (totalSeconds <= 30) {
+        document.body.classList.add("time-warning");
+      } else {
+        document.body.classList.remove("time-warning");
+      }
+    }
+  </script>
+</body>
+</html>
